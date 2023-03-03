@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Push Swap Simulator</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body onkeypress="Enter(event)">
+
+    <audio autoplay src="song.mp3"></audio>
+        
+    <header>Push Swap Simulator</header>
+
+    <div id="container">
+
+        <div id="settings">
+
+            <br>Nombre de valeurs : <input onkeypress="reset_checkbox()"> <br>
+            <span></span> <br>
+
+            <br>Créer les valeurs : 
+            <input id="c1" type="checkbox" onclick="check1()">aléatoirement
+            <input id="c2" type="checkbox" onclick="check2()">manuellement<br>
+            <span id="minmax"></span> <br>
+            <br>
+            <button id="validate" onclick="validate()">Valider</button>
+            <button id="cancel" onclick="close_settings()">Annuler</button> <br><br>
+            <span></span> <br>
+
+        </div>
+
+        <div id="content">
+
+            <section id="leftCol">
+
+                <ul id="nb"><div class='pile'>Pile A</div></ul>
+                <ul id="nb2"><div class='pile'>Pile B</div></ul>
+
+            </section>
+
+            <section id="rightCol">
+
+                <button class="sort" onclick="push_a()">Push A</button>
+                <button class="sort" onclick="push_b()">Push B</button>
+                <button class="sort" onclick="swap_a()">Swap A</button>
+                <button class="sort" onclick="swap_b()">Swap B</button>
+                <button class="sort" onclick="swap_ab()">Both</button>
+                <button class="sort" onclick="rotate_a()">Rotate A</button>
+                <button class="sort" onclick="rotate_b()">Rotate B</button>
+                <button class="sort" onclick="rotate_ab()">Both</button>
+                <button class="sort" onclick="reverse_rotate_a()">Reverse Rotate A</button>
+                <button class="sort" onclick="reverse_rotate_b()">Reverse Rotate B</button>
+                <button class="sort" onclick="reverse_rotate_ab()">Both</button>
+                <button class="sort" id="cncl" onclick="cancel_move()">Cancel</button>
+                <button class="sort" id="open_settings" onclick="open_settings()">Settings</button>
+
+            </section>
+            
+            <div id="counter">Nombre de coups : <span id="ct"></span></div>
+
+        </div>
+
+    </div>
+
+    <canvas id="Matrix"></canvas>
+</body>
+<script src="matrix.js"></script>
+<script src="sorting.js"></script>
+<script src="validate_settings.js"></script>
+<script>
+    
+    var nb_tries = 0;
+    
+    function Enter(event) //valider quand on appuie sur Entrée
+    {
+        var key_pressed = event.which;
+        if (key_pressed == 13) //le code de la touche Entrée
+        {
+            validate();
+        }
+    }
+    
+    function open_settings()
+    {
+        document.getElementById("settings").style.display = 'block';
+        document.getElementById("cancel").style.display = 'inline-block';
+        document.getElementById("content").style.display = 'none';
+    }
+    
+    function close_settings()
+    {
+        document.getElementById("settings").style.display = 'none';
+        document.getElementById("content").style.display = 'grid';
+    }
+    
+    function check1() //verifie si la 1ere option est cochée (aleatoire)
+    {
+        if (document.getElementById("c1").checked == true)
+        {
+            document.getElementById("c2").checked = false;
+            document.getElementsByTagName("span")[1].innerHTML = "<br>Valeur min : <input placeholder='-999'><p></p>";
+            document.getElementsByTagName("span")[1].innerHTML += "Valeur max : <input placeholder='999'><p></p>";
+            document.getElementsByTagName("span")[2].innerHTML = "";
+        }
+    }
+    
+    function check2() //verifie si la 2eme option est cochée (manuelle)
+    {
+        document.getElementsByTagName("span")[1].innerHTML = "";
+        if (document.getElementById("c2").checked == true)
+        {
+            document.getElementById("c1").checked = false;
+            document.getElementsByTagName("span")[2].innerHTML = "";
+            nb_val = document.getElementsByTagName("input")[0].value;
+            var nb = parseInt(nb_val);
+            if (nb >= 2 && nb <= 100)
+            {
+                var count = 0;
+                while (count < nb)
+                {
+                    document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values'>";
+                    count++;
+                }
+                document.getElementsByTagName("span")[1].innerHTML += "<br>";
+            }
+        }
+    }
+    
+    function reset_checkbox()
+    {
+        if (document.getElementById("c2").checked == true)
+        {
+            document.getElementById("c2").checked = false;
+            document.getElementsByTagName("span")[1].innerHTML = "";
+        }
+    }
+    
+    function sort_check() //appelée à chaque manipulation de la pile A, vérifie si cette dernière est triée
+    {
+        const tab = [];
+        var i = 0, len = 0;
+        var list = document.getElementsByClassName("val_A");
+        while (list[len])
+        {
+            tab[len] = parseInt(list[len].innerHTML);
+            len++;
+        }
+        while (i < len)
+        {
+            if (tab[i] > tab[i + 1])
+                i = len;
+            i++;
+        }
+        
+        if (i == len && !document.getElementsByClassName("val_B")[0])
+        {
+            i = 0;
+            while (i < len)
+            {
+                list[i].style.backgroundColor = "green";
+                i++;
+            }
+            return (1);
+        }
+        else
+        {
+            i = 0;
+            while (i < len)
+            {
+                list[i].style.backgroundColor = "var(--itemBgColor)";
+                i++;
+            }
+            return (0);
+        }
+        
+    }
+
+</script>
+</html>
