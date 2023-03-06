@@ -20,7 +20,7 @@ button{
 header
 {
     text-align: center;
-    font-size: 40px;
+    font-size: 5vh;
     color: gold;
     background-color: black;
     border: 3px dashed red;
@@ -126,8 +126,12 @@ ul li{
     box-shadow: 0 0 30px #eee;
 }
 
-.sort:nth-child(3){
+.col1{
     grid-column: 1;
+}
+
+.mob{
+    display: none;
 }
         
 #cncl{    
@@ -180,5 +184,34 @@ input:not(#c1, #c2)
     .sort{
         width: 130px;
         height: 70px;
+    }
+}
+
+@media screen and (max-width: 768px){
+    
+    #container{
+        width: 80%;
+    }
+    
+    #rightCol{
+        grid-gap: 5px;
+        grid-row-gap: 15px;
+    }
+    
+    .sort{
+        margin: 1px;
+        font-size: 10px;
+    }
+    
+    .cmpt{
+        display: none;
+    }
+    
+    .mob{
+        display: block;
+    }
+    
+    .mob img{
+        width: 18px;
     }
 }
