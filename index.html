@@ -16,7 +16,7 @@
 
         <div id="settings">
 
-            <br>Nombre de valeurs : <input onkeypress="reset_checkbox()"> <br>
+            <br>Nombre de valeurs : <input onkeyup="update_values()"> <br>
             <span></span> <br>
 
             <br>Créer les valeurs : 
@@ -85,6 +85,7 @@
 <script>
     
     var nb_tries = 0;
+    const save = [];
     
     function Enter(event) //valider quand on appuie sur Entrée
     {
@@ -108,10 +109,22 @@
         document.getElementById("content").style.display = 'grid';
     }
     
+    function save_values()
+    {
+        var len = 0;
+        var vals = document.getElementsByClassName("my_values");
+        while (vals[len])
+        {
+            save[len] = vals[len].value;
+            len++;
+        }
+    }
+    
     function check1() //verifie si la 1ere option est cochée (aleatoire)
     {
         if (document.getElementById("c1").checked == true)
         {
+            save_values();
             document.getElementById("c2").checked = false;
             document.getElementsByTagName("span")[1].innerHTML = "<br>Valeur min : <input placeholder='-999'><p></p>";
             document.getElementsByTagName("span")[1].innerHTML += "Valeur max : <input placeholder='999'><p></p>";
@@ -121,6 +134,7 @@
     
     function check2() //verifie si la 2eme option est cochée (manuelle)
     {
+        save_values();
         document.getElementsByTagName("span")[1].innerHTML = "";
         if (document.getElementById("c2").checked == true)
         {
@@ -128,25 +142,38 @@
             document.getElementsByTagName("span")[2].innerHTML = "";
             nb_val = document.getElementsByTagName("input")[0].value;
             var nb = parseInt(nb_val);
-            if (nb >= 2 && nb <= 100)
+            if (nb > 2 && nb <= 100)
             {
                 var count = 0;
                 while (count < nb)
                 {
-                    document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values'>";
+                    if (save[count])
+                        document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values' value=" + save[count] + ">";
+                    else
+                        document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values'>";
                     count++;
                 }
-                document.getElementsByTagName("span")[1].innerHTML += "<br>";
             }
         }
     }
     
-    function reset_checkbox()
+    function update_values()
     {
-        if (document.getElementById("c2").checked == true)
+        var nb_val = document.getElementsByTagName("input")[0].value;
+        var nb = parseInt(nb_val);
+        var i = 0;
+        save_values();
+        if (document.getElementById("c2").checked == true && nb > 2)
         {
-            document.getElementById("c2").checked = false;
             document.getElementsByTagName("span")[1].innerHTML = "";
+            while (i < nb)
+            {
+                if (save[i])
+                    document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values' value=" + save[i] + ">";
+                else
+                    document.getElementsByTagName("span")[1].innerHTML += "<br><input class='my_values'>";
+                i++;
+            }
         }
     }
     
